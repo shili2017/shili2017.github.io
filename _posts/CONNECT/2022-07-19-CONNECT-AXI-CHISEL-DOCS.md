@@ -27,6 +27,7 @@ Clone the wrapper repository and build. `PROTOCOL` can be `AXI4`, `AXI4-Lite`, `
 ```bash
 $ git clone https://github.com/shili2017/CONNECT-AXI.git
 $ cd CONNECT-AXI
+$ git submodule update --init --recursive
 $ make PROTOCOL=<PROTOCOL>
 ```
 
