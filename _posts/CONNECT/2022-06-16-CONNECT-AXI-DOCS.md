@@ -114,8 +114,8 @@ parameter DEST_WIDTH   = 4;
 Users also need to calculate the standard AXI4[-Stream] flit data width by themselves. For example, with the default parameters, we have
 
 ```verilog
-parameter AXI4_FLIT_DATA_WIDTH  = 92;
-parameter AXI4S_FLIT_DATA_WIDTH = 101;
+parameter AXI4_FLIT_DATA_WIDTH  = 76;
+parameter AXI4S_FLIT_DATA_WIDTH = 93;
 ```
 
 ## AXI4
@@ -129,53 +129,48 @@ AXI4 requests are sent in virtual channel 1, and AXI4 responses are sent in virt
 ### AW/AR Channel
 
 ```
-channel   - [91 : 89]
+AXI_x     - [75     ]
+axid      - [74 : 67]
 ------ padding ------
-axlen     - [76 : 69]
-axsize    - [68 : 66]
-axburst   - [65 : 64]
-axlock    - [63 : 63]
-axcache   - [62 : 59]
-axprot    - [58 : 56]
-axqos     - [55 : 52]
-axregion  - [51 : 48]
-axaddr    - [47 : 16]
-axuser    - [15 :  8]
-axid      - [ 7 :  0]
+axregion  - [60 : 57]
+axqos     - [56 : 53]
+axprot    - [52 : 50]
+axcache   - [49 : 46]
+axlock    - [45     ]
+axburst   - [44 : 43]
+axsize    - [42 : 40]
+axlen     - [39 : 32]
+axaddr    - [31 :  0]
 ```
 
 ### W Channel
 
 ```
-channel   - [91 : 89]
-wlast     - [88 : 88]
-wstrb     - [87 : 80]
-wdata     - [79 : 16]
-wuser     - [15 :  8]
-wid       - [ 7 :  0]
+AXI_W     - [75     ]
+------ padding ------
+wlast     - [72     ]
+wstrb     - [71 : 64]
+wdata     - [63 :  0]
 ```
 
 ### B Channel
 
 ```
-channel   - [91 : 89]
+AXI_W     - [75     ]
+bid       - [74 : 67]
 ------ padding ------
-bresp     - [81 : 80]
+bresp     - [65 : 64]
 ------ padding ------
-buser     - [15 :  8]
-bid       - [ 7 :  0]
 ```
 
 ### R Channel
 
 ```
-channel   - [91 : 89]
-rlast     - [88 : 88]
------- padding ------
-rresp     - [81 : 80]
-rdata     - [79 : 16]
-ruser     - [15 :  8]
-rid       - [ 7 :  0]
+AXI_R     - [75     ]
+rid       - [74 : 67]
+rlast     - [66     ]
+rresp     - [65 : 64]
+rdata     - [63 :  0]
 ```
 
 ## AXI4-Stream
@@ -187,13 +182,12 @@ AXI4-Stream requests are encoded in a single AXI4-Stream flit. A AXI4-Stream req
 ### T Channel
 
 ```
-tlast - [100 :100]
-tkeep - [ 99 : 92]
-tstrb - [ 91 : 84]
-tdata - [ 83 : 20]
-tdest - [ 19 : 16]
-tuser - [ 15 :  8]
-tid   - [  7 :  0]
+tdest - [92 : 89]
+tid   - [88 : 81]
+tlast - [80     ]
+tkeep - [79 : 72]
+tstrb - [71 : 64]
+tdata - [63 :  0]
 ```
 
 ## Related Source Files
@@ -278,6 +272,8 @@ The network itself can run at a higher clock frequency as ASIC, and the remainin
 ---get_flit_ready--> |        | ---sc_deq_ready--> |        | ---enq_flit_ready--> |               | ---EN_recv_ports_putCredits----->
                      +--------+                    +--------+                      +---------------+
 ```
+
+> TODO: 1) Call AXI4 flit a packet. 2) One FIFO for each VC. 3) Add one more VC for W channel. 4) Do read and write in the same cycle? 5) #rows in deserializer should be #src * #vc. 6) One DCFIFO, handle credits approximately. 7) Serializer & deserializer should be close to NoC.
 
 ## Related Parameters
 
