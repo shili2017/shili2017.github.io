@@ -155,9 +155,9 @@ object AXI4ChannelW2PacketData {
 
 // Decode
 object Packet2AXI4ChannelW {
-  def apply[B <: AXI4LiteIO](bus_io: B)(packet: UInt)(implicit p: Parameters): AXI4LiteChannelW = {
-    assert(packet.getWidth == AXI4PacketWidth(bus_io))
-    if (bus_io.getClass == classOf[AXI4IO]) {
+  def apply(packet: UInt)(implicit p: Parameters): AXI4LiteChannelW = {
+    assert(packet.getWidth == p(PACKET_WIDTH))
+    if (p(PROTOCOL) == "AXI4") {
       val w = Wire(new AXI4ChannelW)
       w.strb := packet(
         3 + AXI4Parameters.AXI4DataWidth + AXI4Parameters.AXI4DataWidth / 8,
