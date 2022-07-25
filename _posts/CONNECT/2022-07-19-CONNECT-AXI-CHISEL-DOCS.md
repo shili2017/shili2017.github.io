@@ -105,6 +105,26 @@ class LibraryConfig
     })
 ```
 
+# Requiments on Network
+
+The Noc in the wrapper can be replaced by another in the future, and the wrapper requires the network to 
+
+- Support virtual channels for AXI4 and AXI4-Lite (at least 3 VCs)
+
+- Maintain in-order transfer between sources and sinks
+
+- Be credit-based for flow control
+
+- Is possible to convert to a valid-ready flit interface
+
+However, the network can still
+
+- Arbitrarily interleave flits as long as they are in-order
+
+- Be in any kind of topology
+
+- Support any width of flit data width
+
 # Programmer's Manual
 
 The overall design is shown in the following diagrams.
